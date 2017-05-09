@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>anoanswer</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <script src = "node_modules\socket.io\node_modules\socket.io-client\dist\socket.io.js"></script>
+        
+        <script>
+            
+            var socket = io('http://localhost:8080');
+            
+            function isEnterKey(event) {
+                if (event.keyCode===13) {
+                    updateQuestion();
+                }
+            }
+            
+            function updateQuestion() {
+                socket.emit('RecieveNewQuestion', document.getElementById('txtInput').value);
+                document.getElementById('txtInput').value = "";
+            }
+            
+            socket.on('AttachNewQuestion', function(msg) {
+                document.getElementById('messages').innerHTML = msg;
+            });
+            
+        </script>
+    </head>
+    <body>
+        <h1 id="messages"> ASK A QUESTION : </h1>
+        <input type='text' id='txtInput' onkeypress=isEnterKey(event) />
+        <input type='button' onclick=updateQuestion() value="submit" />
+        <h2> ANSWER ANY OF THE FOLLOWING QUESTIONS </h2>
+        <div id = "questions"></div>
+    </body>
+</html>

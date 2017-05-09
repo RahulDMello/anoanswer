@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/anonDfeline/anoanswer/issues"
   },
-  "homepage": "https://github.com/anonDfeline/anoanswer#readme"
+  "homepage": "https://github.com/anonDfeline/anoanswer#readme",
+  "dependencies": {
+    "socket.io": "^2.0.1"
+  }
 }
