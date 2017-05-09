@@ -1,0 +1,19 @@
+{
+  "name": "anonproject",
+  "version": "1.0.0",
+  "description": "an app that takes the surroundings and floods them with anonymous questions asked by people in his surrounding that he can answer to anonymously",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anonDfeline/anoanswer.git"
+  },
+  "author": "rahul dmello",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anonDfeline/anoanswer/issues"
+  },
+  "homepage": "https://github.com/anonDfeline/anoanswer#readme"
+}

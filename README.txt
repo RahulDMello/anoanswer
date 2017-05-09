@@ -1,0 +1,1 @@
+an app that takes the surroundings and floods them with anonymous questions asked by people in his surrounding that he can answer to anonymously
