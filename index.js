@@ -14,7 +14,7 @@ var app = http.createServer(function(request, response) {
 var io = require('socket.io')(app);
 
 io.on('connection', onRequest);
-
+ 
 function onRequest(socket) {
     socket.on('RecieveNewQuestion', function(msg){
         if (!(msg == "" || msg == null)) {
