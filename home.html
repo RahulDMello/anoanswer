@@ -37,12 +37,15 @@ and open the template in the editor.
             })
 
             function updatePosition() {
-                setInterval(function () {
-                    navigator.geolocation.getCurrentPosition(function (pos) {
-                        socket.emit('UpdatePosition', {coords : {'latitude' : pos.coords.latitude, 'longitude' : pos.coords.longitude}});
-                        console.log(pos.coords);
-                    });
-                }, 5000);
+                updatePositionHelper();
+                setInterval(updatePositionHelper(), 5000);
+            }
+            
+            function updatePositionHelper() {
+                navigator.geolocation.getCurrentPosition(function (pos) {
+                    socket.emit('UpdatePosition', {coords : {'latitude' : pos.coords.latitude, 'longitude' : pos.coords.longitude}});
+                    console.log(pos.coords);
+                });
             }
 
         </script>
