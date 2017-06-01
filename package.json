@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -18,5 +19,6 @@
   "homepage": "https://github.com/anonDfeline/anoanswer#readme",
   "dependencies": {
     "socket.io": "^2.0.1"
-  }
+  },
+  "devDependencies": {}
 }
