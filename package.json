@@ -4,7 +4,7 @@
   "description": "an app that takes the surroundings and floods them with anonymous questions asked by people in his surrounding that he can answer to anonymously",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
   },
   "repository": {
