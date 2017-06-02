@@ -70,6 +70,6 @@ function deg2rad(deg) {
     return deg * (Math.PI / 180)
 }
 
-// app.listen((process.env.PORT || 8080));
-app.listen(8080);
+app.listen((process.env.PORT || 8080));
+// app.listen(8080);
 console.log("server is running...");
