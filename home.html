@@ -10,12 +10,12 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <!-- <script src = "node_modules\socket.io\node_modules\socket.io-client\dist\socket.io.js"></script> -->
-        <script src ="/socket.io/socket.io.js"></script>
+        <script src = "node_modules\socket.io\node_modules\socket.io-client\dist\socket.io.js"></script>
+        <!-- <script src ="/socket.io/socket.io.js"></script> -->
         <script>
 
-            // var socket = io('http://localhost:8080');
-            var socket = io('https://calm-crag-26465.herokuapp.com/');
+            var socket = io('http://localhost:8080');
+            // var socket = io('https://calm-crag-26465.herokuapp.com/');
 
             function isEnterKey(event) {
                 if (event.keyCode === 13) {
@@ -37,15 +37,45 @@ and open the template in the editor.
             })
 
             function updatePosition() {
-                updatePositionHelper();
-                setInterval(updatePositionHelper(), 5000);
-            }
-            
-            function updatePositionHelper() {
-                navigator.geolocation.getCurrentPosition(function (pos) {
-                    socket.emit('UpdatePosition', {coords : {'latitude' : pos.coords.latitude, 'longitude' : pos.coords.longitude}});
-                    console.log(pos.coords);
+                updatePositionHelper(positionUpdateSuccessCallback, function () {
+                    console.log('Cannot get location');
                 });
+                setInterval(updatePositionHelper(positionUpdateSuccessCallback, function () {
+                    console.log('Cannot get location');
+                }), 5000);
+            }
+
+            function positionUpdateSuccessCallback(coords) {
+                socket.emit('UpdatePosition', {coords: {'latitude': coords.latitude, 'longitude': coords.longitude}});
+                console.log(coords);
+            }
+
+            function updatePositionHelper(successCallback, errorCallback) {
+                successCallback = successCallback || function () {
+                };
+                errorCallback = errorCallback || function () {
+                };
+
+                // Try HTML5-spec geolocation.
+                var geolocation = navigator.geolocation;
+
+                if (geolocation) {
+                    // We have a real geolocation service.
+                    try {
+                        function handleSuccess(position) {
+                            successCallback(position.coords);
+                        }
+
+                        geolocation.watchPosition(handleSuccess, errorCallback, {
+                            enableHighAccuracy: true,
+                            maximumAge: 5000 // 5 sec.
+                        });
+                    } catch (err) {
+                        errorCallback();
+                    }
+                } else {
+                    errorCallback();
+                }
             }
 
         </script>
