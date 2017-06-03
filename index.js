@@ -6,6 +6,10 @@
 
 var http = require('http');
 var fs = require('fs');
+var MongoClient = require('mongodb').MongoClient;
+var db;
+var url = "mongodb://localhost:27017/userinfo";  // for localhost
+// var url = "mongodb://calm-crag-26465.herokuapp.com/mydb";  for server deploy
 var app = http.createServer(function (request, response) {
     response.writeHead(200, {"Context-Type": "text/html"});
     fs.createReadStream("./home.html").pipe(response);  // returns the home page
@@ -42,7 +46,7 @@ function onRequest(socket) {
         Object.keys(io.sockets.sockets).forEach(function (id) {
             console.log("ID:", id);  // socketId
             console.log('Pos:', io.sockets.sockets[id].coords);
-        })
+        });
     });
 }
 ;
@@ -67,9 +71,14 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
 }
 
 function deg2rad(deg) {
-    return deg * (Math.PI / 180)
+    return deg * (Math.PI / 180);
 }
 
-app.listen((process.env.PORT || 8080));
-// app.listen(8080);
-console.log("server is running...");
+MongoClient.connect(url, function (err, database) {
+    
+    db = database;
+    console.log('database connected!');
+    // app.listen((process.env.PORT || 8080));  for server deploy
+    app.listen(8080);  // for localhost
+    console.log("server is running...");
+});
