@@ -20,44 +20,80 @@ var io = require('socket.io')(app);
 io.on('connection', onRequest);
 
 function onRequest(socket) {
+    
+    // TODO populate questions in this list
+    var questionList;
+    
+    console.log("socket.id: " + socket.id);
+    db.collection("users").insertOne({socketID: socket.id});
     socket.on('RecieveNewQuestion', function (msg) {
         if (!(msg == "" || msg == null)) {
 
             // sends the question back to the client after some validations 
             // this event on the client side is responsible to show the question in the user's question area
             // TODO perform validations
+            db.collection("users").update({socketID: socket.id}, {$set: {curr_ques: msg}}, function (err, obj) {
+                if (err)
+                    throw err;
+                // success
+            });
             socket.emit('AttachNewQuestion', msg);
 
             // send to nearby people so they can reply
-            Object.keys(io.sockets.sockets).forEach(function (id) {
-                console.log("ID:", id);  // socketId
-                if (getDistanceFromLatLonInKm(socket.coords.latitude, socket.coords.longitude,
-                        io.sockets.sockets[id].coords.latitude, io.sockets.sockets[id].coords.longitude) < 2) {
-                    io.sockets.sockets[id].emit('AddNewQuestionToList', msg);
-                } else {
-                    console.log(getDistanceFromLatLonInKm(socket.coords.latitude, socket.coords.longitude, io.sockets.sockets[id].coords.latitude, io.sockets.sockets[id].coords.longitude));
-                }
-            });
+            sendQuesToNearByUsers(socket.id, io.sockets.sockets);
         }
     });
     socket.on('UpdatePosition', function (position) {
-        console.log(position);
-        socket.coords = position.coords;
-        Object.keys(io.sockets.sockets).forEach(function (id) {
-            console.log("ID:", id);  // socketId
-            console.log('Pos:', io.sockets.sockets[id].coords);
+        db.collection("users").update({socketID: socket.id}, {$set: {coords: position.coords}}, function (err, obj) {
+            if (err)
+                throw err;
+            sendQuesToNearByUsers(socket.id, io.sockets.sockets);
         });
+    });
+
+    socket.on('disconnect', function () {
+        console.log('disconnect: ' + socket.id);
+        var query = {socketID: socket.id};
+        db.collection("users").remove(query, function (err, obj) {
+            if (err)
+                throw err;
+            console.log(obj.result.n + " document(s) deleted");
+        });
+        console.log('disconnect');
     });
 }
 ;
 
-
-io.on('disconnect', function (socket) {
-    console.log('disconnect');
-});
+// near by = 2km
+function sendQuesToNearByUsers(sID, sockets) {
+    console.log("sendQues socket.id: " + sID);
+    var user;
+    db.collection("users").findOne({socketID: sID}, function (err, result) {
+        if (err)
+            throw err;
+        user = result;
+        var coords1 = user.coords;
+        var ques = user.curr_ques;
+        if (ques) {
+            var coords2;
+            Object.keys(sockets).forEach(function (id) {
+                db.collection("users").findOne({socketID: id}, function (err, result) {
+                    if (err)
+                        throw err;
+                    coords2 = result.coords;
+                    if (getDistanceFromLatLonInKm(coords1.latitude, coords1.longitude, coords2.latitude, coords2.longitude) < 2) {
+                        sockets[id].emit('AddNewQuestionToList', ques);
+                    } else {
+                        // inappropriate distance
+                    }
+                });
+            });
+        }
+    });
+}
 
 function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-    var R = 6371; // Radius of the earth in km
+    var R = 6371;  // Radius of the earth in km
     var dLat = deg2rad(lat2 - lat1);  // deg2rad below
     var dLon = deg2rad(lon2 - lon1);
     var a =
@@ -66,7 +102,7 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
             Math.sin(dLon / 2) * Math.sin(dLon / 2)
             ;
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    var d = R * c; // Distance in km
+    var d = R * c;  // Distance in km
     return d;
 }
 
@@ -75,7 +111,8 @@ function deg2rad(deg) {
 }
 
 MongoClient.connect(url, function (err, database) {
-    
+    if (err)
+        throw err;
     db = database;
     console.log('database connected!');
     // app.listen((process.env.PORT || 8080));  for server deploy
