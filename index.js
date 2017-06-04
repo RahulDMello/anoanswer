@@ -20,10 +20,11 @@ var io = require('socket.io')(app);
 io.on('connection', onRequest);
 
 function onRequest(socket) {
-    
+
+
     // TODO populate questions in this list
-    var questionList;
-    
+    socket.questions = {};
+
     console.log("socket.id: " + socket.id);
     db.collection("users").insertOne({socketID: socket.id});
     socket.on('RecieveNewQuestion', function (msg) {
@@ -37,17 +38,18 @@ function onRequest(socket) {
                     throw err;
                 // success
             });
-            socket.emit('AttachNewQuestion', msg);
 
-            // send to nearby people so they can reply
-            sendQuesToNearByUsers(socket.id, io.sockets.sockets);
+            updateUsersQuestionList(socket, io.sockets.sockets);
+            socket.emit('AddNewQuestionToList', socket.questions);
         }
     });
+
     socket.on('UpdatePosition', function (position) {
         db.collection("users").update({socketID: socket.id}, {$set: {coords: position.coords}}, function (err, obj) {
             if (err)
                 throw err;
-            sendQuesToNearByUsers(socket.id, io.sockets.sockets);
+            updateUsersQuestionList(socket, io.sockets.sockets);
+            socket.emit('AddNewQuestionToList', socket.questions);
         });
     });
 
@@ -57,12 +59,42 @@ function onRequest(socket) {
         db.collection("users").remove(query, function (err, obj) {
             if (err)
                 throw err;
+            Object.keys(io.sockets.sockets).forEach(function (id) {
+                if (io.sockets.sockets[id].questions[id])
+                    delete io.sockets.sockets[id].questions[socket.id];
+            });
             console.log(obj.result.n + " document(s) deleted");
         });
         console.log('disconnect');
     });
 }
 ;
+
+// will populate the socket.questions property with questions of people within 2km radius
+function updateUsersQuestionList(socket, sockets) {
+    db.collection("users").findOne({socketID: socket.id}, function (err, result) {
+        if (err)
+            throw err;
+        user = result;
+        var coords1 = user.coords;
+        if (coords1) {
+            var coords2;
+            Object.keys(sockets).forEach(function (id) {
+                db.collection("users").findOne({socketID: id}, function (err, result) {
+                    if (err)
+                        throw err;
+                    coords2 = result.coords;
+                    if (coords2 && getDistanceFromLatLonInKm(coords1.latitude, coords1.longitude, coords2.latitude, coords2.longitude) < 2) {
+                        socket.questions[id] = result.curr_ques;
+                    } else {
+                        if (socket.questions[id])
+                            delete socket.questions[id];
+                    }
+                });
+            });
+        }
+    });
+}
 
 // near by = 2km
 function sendQuesToNearByUsers(sID, sockets) {
