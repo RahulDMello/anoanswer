@@ -8,8 +8,6 @@
 var socket = io('http://localhost:8080');  // for localhost
 // var socket = io('https://calm-crag-26465.herokuapp.com/');  for server deploy
 
-console.log(socket);
-
 function isEnterKey(event) {
     var check = validate();
     if (event.keyCode === 13) {
@@ -51,14 +49,11 @@ function updatePosition() {
     updatePositionHelper(positionUpdateSuccessCallback, function () {
         console.log('Cannot get location');
     });
-    setInterval(updatePositionHelper(positionUpdateSuccessCallback, function () {
-        console.log('Cannot get location');
-    }), 10000);
 }
 
 function positionUpdateSuccessCallback(coords) {
     socket.emit('UpdatePosition', {coords: {'latitude': coords.latitude, 'longitude': coords.longitude}});
-    console.log(coords);
+    console.log({coords: {'latitude': coords.latitude, 'longitude': coords.longitude}});
 }
 
 function updatePositionHelper(successCallback, errorCallback) {
@@ -87,4 +82,5 @@ function updatePositionHelper(successCallback, errorCallback) {
     } else {
         errorCallback();
     }
+    setTimeout(updatePosition, 10000); // 10 secs
 }

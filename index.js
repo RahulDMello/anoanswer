@@ -21,7 +21,6 @@ io.on('connection', onRequest);
 
 function onRequest(socket) {
 
-
     // TODO populate questions in this list
     socket.questions = {};
 
@@ -37,9 +36,9 @@ function onRequest(socket) {
                 if (err)
                     throw err;
                 // success
-                updateUsersQuestionList(socket, io.sockets.sockets);
                 socket.emit('AttachNewQuestion', msg);
-                socket.emit('AddNewQuestionToList', socket.questions);
+                updateUsersQuestionList(socket, io.sockets.sockets);
+                console.log(socket.questions);
             });
         }
     });
@@ -49,7 +48,7 @@ function onRequest(socket) {
             if (err)
                 throw err;
             updateUsersQuestionList(socket, io.sockets.sockets);
-            socket.emit('AddNewQuestionToList', socket.questions);
+            console.log(socket.questions);
         });
     });
 
@@ -79,47 +78,22 @@ function updateUsersQuestionList(socket, sockets) {
         user = result;
         var coords1 = user.coords;
         if (coords1) {
-            var coords2;
-            Object.keys(sockets).forEach(function (id) {
-                db.collection("users").findOne({socketID: id}, function (err, result) {
-                    if (err)
-                        throw err;
-                    coords2 = result.coords;
-                    if (coords2 && getDistanceFromLatLonInKm(coords1.latitude, coords1.longitude, coords2.latitude, coords2.longitude) < 2) {
-                        socket.questions[id] = result.curr_ques;
-                    } else {
-                        if (socket.questions[id])
-                            delete socket.questions[id];
-                    }
-                });
-            });
-        }
-    });
-}
+            db.collection("users").find().toArray(function (err, result) {
+                if (err)
+                    throw err;
 
-// near by = 2km
-function sendQuesToNearByUsers(sID, sockets) {
-    console.log("sendQues socket.id: " + sID);
-    var user;
-    db.collection("users").findOne({socketID: sID}, function (err, result) {
-        if (err)
-            throw err;
-        user = result;
-        var coords1 = user.coords;
-        var ques = user.curr_ques;
-        if (ques) {
-            var coords2;
-            Object.keys(sockets).forEach(function (id) {
-                db.collection("users").findOne({socketID: id}, function (err, result) {
-                    if (err)
-                        throw err;
-                    coords2 = result.coords;
-                    if (getDistanceFromLatLonInKm(coords1.latitude, coords1.longitude, coords2.latitude, coords2.longitude) < 2) {
-                        sockets[id].emit('AddNewQuestionToList', ques);
+                for (var i = 0, l = result.length; i < l; i++) {
+                    var coords2 = result[i].coords;
+                    if (coords2 && getDistanceFromLatLonInKm(coords1.latitude, coords1.longitude, coords2.latitude, coords2.longitude) < 2) {
+                        socket.questions[result[i].socketID] = result[i].curr_ques;
                     } else {
-                        // inappropriate distance
+                        if (socket.questions[result[i].socketID])
+                            delete socket.questions[result[i].socketID];
                     }
-                });
+                }
+
+                socket.emit('AddNewQuestionToList', socket.questions);
+
             });
         }
     });
