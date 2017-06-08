@@ -10,86 +10,57 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+        <!-- jquery -->
+        <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
         <script src = "node_modules\socket.io\node_modules\socket.io-client\dist\socket.io.js"></script>  <!-- for localhost -->
         <!-- <script src ="/socket.io/socket.io.js"></script> for server deploy -->
-        <script>
 
-            var socket = io('http://localhost:8080');  // for localhost
-            // var socket = io('https://calm-crag-26465.herokuapp.com/');  for server deploy
+        <script src = "ClientScript.js"></script>
 
-            console.log(socket);
-
-            function isEnterKey(event) {
-                if (event.keyCode === 13) {
-                    updateQuestion();
-                }
+        <style>
+            .affix {
+                top:0;
+                width: 100%;
+                z-index: 9999 !important;
             }
+        </style>
 
-            function updateQuestion() {
-                socket.emit('RecieveNewQuestion', document.getElementById('txtInput').value);
-                document.getElementById('txtInput').value = "";
-            }
-
-            socket.on('AttachNewQuestion', function (msg) {
-                document.getElementById('messages').innerHTML = msg;
-            });
-
-            socket.on('AddNewQuestionToList', function (msg) {
-                document.getElementById('questions').innerHTML = '';
-                Object.keys(msg).forEach(function(key){
-                    document.getElementById('questions').innerHTML += '<br/>' + msg[key];
-                });
-            });
-
-            function updatePosition() {
-                updatePositionHelper(positionUpdateSuccessCallback, function () {
-                    console.log('Cannot get location');
-                });
-                setInterval(updatePositionHelper(positionUpdateSuccessCallback, function () {
-                    console.log('Cannot get location');
-                }), 5000);
-            }
-
-            function positionUpdateSuccessCallback(coords) {
-                socket.emit('UpdatePosition', {coords: {'latitude': coords.latitude, 'longitude': coords.longitude}});
-                console.log(coords);
-            }
-
-            function updatePositionHelper(successCallback, errorCallback) {
-                successCallback = successCallback || function () {
-                };
-                errorCallback = errorCallback || function () {
-                };
-
-                // Try HTML5-spec geolocation.
-                var geolocation = navigator.geolocation;
-
-                if (geolocation) {
-                    // We have a real geolocation service.
-                    try {
-                        function handleSuccess(position) {
-                            successCallback(position.coords);
-                        }
-
-                        geolocation.watchPosition(handleSuccess, errorCallback, {
-                            enableHighAccuracy: true,
-                            maximumAge: 5000 // 5 sec.
-                        });
-                    } catch (err) {
-                        errorCallback();
-                    }
-                } else {
-                    errorCallback();
-                }
-            }
-
-        </script>
     </head>
     <body onload="updatePosition()">
-        <h1 id="messages"> ASK A QUESTION : </h1>
-        <input type='text' id='txtInput' onkeypress=isEnterKey(event) />
-        <input type='button' onclick=updateQuestion() class="btn btn-default btn-lg" value="submit" />
-        <h2> ANSWER ANY OF THE FOLLOWING QUESTIONS </h2>
-        <div id = "questions"></div>
+
+        <nav class="navbar navbar-inverse" data-spy="affix" data-offset-top="15">
+            <div class="container-fluid">
+                <div class="navbar-brand" id="currQues"> Current Question: </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <h2 id="messages"> ASK A QUESTION : </h2>
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-group" id="boxInput">
+                        <input type='text' id='txtInput' onkeyup=isEnterKey(event) class="form-control" placeholder="Question (?)"/>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <input type='button' disabled="true" onclick=updateQuestion() class="btn btn-primary btn-block" id="submit" value="Submit" />
+                </div>
+            </div>
+            <h3> ANSWER ANY OF THE FOLLOWING QUESTIONS </h3>
+            <div id = "questions">
+
+            </div>
+            <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>.
+        </div>
     </body>
 </html>

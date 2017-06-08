@@ -9,7 +9,7 @@ var fs = require('fs');
 var MongoClient = require('mongodb').MongoClient;
 var db;
 var url = "mongodb://localhost:27017/userinfo";  // for localhost
-// var url = "mongodb://calm-crag-26465.herokuapp.com/mydb";  for server deploy
+// var url = "mongodb://calm-crag-26465.herokuapp.com/userinfo";  for server deploy
 var app = http.createServer(function (request, response) {
     response.writeHead(200, {"Context-Type": "text/html"});
     fs.createReadStream("./home.html").pipe(response);  // returns the home page
@@ -37,10 +37,10 @@ function onRequest(socket) {
                 if (err)
                     throw err;
                 // success
+                updateUsersQuestionList(socket, io.sockets.sockets);
+                socket.emit('AttachNewQuestion', msg);
+                socket.emit('AddNewQuestionToList', socket.questions);
             });
-
-            updateUsersQuestionList(socket, io.sockets.sockets);
-            socket.emit('AddNewQuestionToList', socket.questions);
         }
     });
 
@@ -60,7 +60,8 @@ function onRequest(socket) {
             if (err)
                 throw err;
             Object.keys(io.sockets.sockets).forEach(function (id) {
-                if (io.sockets.sockets[id].questions[id])
+                // console.log(id + ": { "+io.sockets.sockets[id].questions+ "}");
+                if (io.sockets.sockets[id].questions[socket.id])
                     delete io.sockets.sockets[id].questions[socket.id];
             });
             console.log(obj.result.n + " document(s) deleted");
