@@ -42,7 +42,6 @@ socket.on('AddNewQuestionToList', function (msg) {
     Object.keys(msg).forEach(function (key) {
         document.getElementById('questions').innerHTML += '<br/>' + msg[key];
     });
-    console.log(msg);
 });
 
 function updatePosition() {
@@ -53,7 +52,6 @@ function updatePosition() {
 
 function positionUpdateSuccessCallback(coords) {
     socket.emit('UpdatePosition', {coords: {'latitude': coords.latitude, 'longitude': coords.longitude}});
-    console.log({coords: {'latitude': coords.latitude, 'longitude': coords.longitude}});
 }
 
 function updatePositionHelper(successCallback, errorCallback) {

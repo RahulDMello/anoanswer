@@ -38,7 +38,6 @@ function onRequest(socket) {
                 // success
                 socket.emit('AttachNewQuestion', msg);
                 updateUsersQuestionList(socket, io.sockets.sockets);
-                console.log(socket.questions);
             });
         }
     });
@@ -48,24 +47,21 @@ function onRequest(socket) {
             if (err)
                 throw err;
             updateUsersQuestionList(socket, io.sockets.sockets);
-            console.log(socket.questions);
         });
     });
 
     socket.on('disconnect', function () {
-        console.log('disconnect: ' + socket.id);
         var query = {socketID: socket.id};
         db.collection("users").remove(query, function (err, obj) {
             if (err)
                 throw err;
             Object.keys(io.sockets.sockets).forEach(function (id) {
-                // console.log(id + ": { "+io.sockets.sockets[id].questions+ "}");
                 if (io.sockets.sockets[id].questions[socket.id])
                     delete io.sockets.sockets[id].questions[socket.id];
             });
             console.log(obj.result.n + " document(s) deleted");
         });
-        console.log('disconnect');
+        console.log('disconnect: ' + socket.id);
     });
 }
 ;
