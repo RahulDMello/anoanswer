@@ -10,6 +10,7 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+        
         <!-- jquery -->
         <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
 
@@ -22,11 +23,16 @@ and open the template in the editor.
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
+        
+        <!-- socket.io -->
         <script src = "node_modules\socket.io\node_modules\socket.io-client\dist\socket.io.js"></script>  <!-- for localhost -->
         <!-- <script src ="/socket.io/socket.io.js"></script> for server deploy -->
 
+        <!-- self made script for handling socket request -->
         <script src = "ClientScript.js"></script>
 
+        
+        <!-- data-spy on navbar that shows the current question -->
         <style>
             .affix {
                 top:0;
@@ -36,15 +42,19 @@ and open the template in the editor.
         </style>
 
     </head>
-    <body onload="updatePosition()">
+    <body onload="updatePosition()"> <!-- call updatePosition as soon as the page loads to load all the questions -->
 
-        <nav class="navbar navbar-inverse" data-spy="affix" data-offset-top="10">
+        <!-- navigation bar that shows the current question -->
+        <nav class="navbar navbar-inverse" data-spy="affix" data-offset-top="0">
             <div class="container-fluid" style="min-height: 100%; height: auto;">
                 <div class="navbar-brand" id="currQues" style="min-height: 100%; height: auto;"> Current Question: </div>
             </div>
         </nav>
 
+        <!-- main content i.e. form and list of questions -->
         <div class="container">
+            
+            <!-- input fields to submit a question -->
             <h2 id="messages"> ASK A QUESTION : </h2>
             <div class="row">
                 <div class="col-md-9">
@@ -56,11 +66,11 @@ and open the template in the editor.
                     <input type='button' disabled="true" onclick=updateQuestion() class="btn btn-primary btn-block" id="submit" value="Submit" />
                 </div>
             </div>
+            
             <h3> ANSWER ANY OF THE FOLLOWING QUESTIONS </h3>
-            <div id = "questions">
-
-            </div>
-            <!-- <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>. -->
+            <!-- placeholder for the list of questions   -->
+            <div id = "questions"></div>
+            
         </div>
     </body>
 </html>
