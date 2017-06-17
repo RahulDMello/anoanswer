@@ -68,6 +68,22 @@ function onRequest(socket) {
             updateUsersQuestionList(socket, io.sockets.sockets);
         });
     });
+    
+    socket.on('newReply', function(obj) {
+        db.collection("users").update({socketID: obj.socketID}, {$push: {replys: obj.reply}});
+        socket.emit('approvedReply', obj);
+    })
+    
+    socket.on('requestReplyList', function(sID){
+        if(sID){
+            db.collection("users").findOne({socketID: sID}, function (err, result) {
+                var replies = result.replys;
+                socket.emit("replyList", {socketID: sID, reply: replies});
+            });
+        } else {
+            console.log(sID);
+        }
+    });
 
     // NOOOO DONT LEAVE US PLEASE NOOOOO 
     // if you do though lemme clear your document from db and your id and question from other people's sockets 

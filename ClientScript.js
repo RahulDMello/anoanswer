@@ -8,6 +8,9 @@
 var socket = io('http://localhost:8080');  // for localhost
 // var socket = io('https://calm-crag-26465.herokuapp.com/');  for server deploy
 
+// questions and replys
+var questions = {};
+
 // used to process enter submitting in the input field txtInput
 // txtInput takes the input for current question
 function isEnterKey(event) {
@@ -23,6 +26,19 @@ function isEnterKey(event) {
         }
     }
 }
+
+function  submitReply(event) {
+    var txtArea = event.target;
+    var socketID = txtArea.getAttribute("data-sid");
+    if(event.keyCode === 13 && (txtArea.value !== "" && txtArea != null)) {
+        socket.emit('newReply', {socketID: socketID, reply: txtArea.value});
+        txtArea.value = '';
+    }
+}
+
+socket.on('approvedReply', function(obj) {
+    document.getElementById('replylist'+obj.socketID).innerHTML +="<div class='reply'>"+obj.reply+"</div>";
+})
 
 // checks whether the question is blank or not
 // true = not blank
@@ -40,7 +56,7 @@ function updateQuestion() {
 }
 
 // event responds back with the current question after validating it 
-// so we can set it as out current question in the navbar
+// so we can set it as our current question in the navbar
 socket.on('AttachNewQuestion', function (msg) {
     document.getElementById('currQues').innerHTML = " Current Question: " + msg;
 });
@@ -48,12 +64,42 @@ socket.on('AttachNewQuestion', function (msg) {
 // TODO refactor this event
 // msg contains a list of questions and socketIDs of other clients within 2km radius
 socket.on('AddNewQuestionToList', function (msg) {
-    var tablehtml = '<table class="table table-hover"><tbody>';  // set each column in a new row of a table. looks better this way imo
-    Object.keys(msg).forEach(function (key) {
-        tablehtml += '<tr><td>🠶 ' + msg[key]+ '</td></tr>';
+    console.log('new questions yay!'+msg);
+    Object.keys(questions).forEach(function (key) {
+        if(msg[key]) {
+            if(msg[key] !== questions[key]) {
+                document.getElementById(key).innerHTML = "<div style='width:100%'>🠶 " + msg[key] + "</div>";
+                questions[key] = msg[key];
+                var replyID = "reply"+key;
+                document.getElementById(replyID).innerHTML = "<div id='editable' style='replyHolder'>\n\
+                            <textarea placeholder='Reply to the question...' style='width:100%' rows='3' onkeyup=submitReply(event) data-sid='"+key+"'></textarea>\n\
+                            <div id='replylist"+key+"'>\n\
+                                    </div>\n\
+                        </div>";
+            }
+        } else {
+            var element = document.getElementById('tr'+key);
+            element.parentNode.removeChild(element);
+            console.log('delete:'+ questions[key]);
+            delete questions[key];
+        }
     });
-    tablehtml += '</tbody></table>';
-    document.getElementById('questions').innerHTML = tablehtml;
+    Object.keys(msg).forEach(function (key) {
+        var tablehtml = '';  // set each column in a new row of a table. looks better this way imo
+        if(!questions[key]) {
+            tablehtml = "<tr id='tr"+key+"'><td> \n\
+                            <a class='innerLink' role='button' href='#' onclick='show(this)' id='"+key+"' data-active='false'><div style='width:100%'>🠶 " + msg[key] + "</div></a>\n\
+                            <div style='display:none;' id='reply"+key+"'> \n\
+                                <div id='editable' style='replyHolder'><textarea placeholder='Reply to the question...' style='width:100%' rows='3' onkeyup=submitReply(event) data-sid='"+key+"'></textarea></div>\n\
+                                    <div id='replylist"+key+"'>\n\
+                                    </div>\n\
+                            </div> \n\
+                        </td></tr>";
+            questions[key] = msg[key];
+            document.getElementById('questions').innerHTML += tablehtml;
+            console.log('new question attached');
+        }
+    });
 });
 
 
@@ -88,7 +134,7 @@ function updatePositionHelper(successCallback, errorCallback) {
             }
 
             geolocation.watchPosition(handleSuccess, errorCallback, {
-                enableHighAccuracy: true,  // high accuracy because idk how but this fixes its problems with mobiles
+                enableHighAccuracy: true, // high accuracy because idk how but this fixes its problems with mobiles
                 maximumAge: 5000  // 5 sec.
             });
         } catch (err) {
@@ -99,3 +145,26 @@ function updatePositionHelper(successCallback, errorCallback) {
     }
     setTimeout(updatePosition, 10000);  // 10 secs
 }
+
+function show(thead) {
+    var str = "reply" + thead.id;
+    var bool = thead.getAttribute("data-active");
+    if (bool == "false") {
+        socket.emit('requestReplyList', thead.id);
+        document.getElementById(str).style = "display:initial;";
+        thead.setAttribute("data-active", "true");
+    }
+    else {
+        document.getElementById(str).style = "display:none;";
+        thead.setAttribute("data-active", "false");
+    }
+}
+
+socket.on('replyList', function (obj){
+    var html = "";
+    console.log(obj.reply);
+    for (var s in obj.reply) {
+        html += "<div class='reply'>"+obj.reply[s]+"</div>";
+    }
+    document.getElementById('replylist'+obj.socketID).innerHTML = html;
+});
