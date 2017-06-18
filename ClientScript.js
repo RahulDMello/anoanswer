@@ -106,7 +106,7 @@ socket.on('AddNewQuestionToList', function (msg) {
     setTimeout (function () {
         if(CURRENT_COORDS)
             positionUpdateSuccessCallback(CURRENT_COORDS);
-    }, 5000); // 5 secs. still have to decide on a timer but 5 secs seems decent enough ?
+    }, 3500); // 3.5 secs. still have to decide on a timer but 5 secs seems decent enough ?
 });
 
 var count = 0;
