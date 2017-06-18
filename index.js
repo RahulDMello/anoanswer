@@ -72,7 +72,7 @@ function onRequest(socket) {
     socket.on('newReply', function(obj) {
         db.collection("users").update({socketID: obj.socketID}, {$push: {replys: obj.reply}});
         socket.emit('approvedReply', obj);
-    })
+    });
     
     socket.on('requestReplyList', function(sID){
         if(sID){

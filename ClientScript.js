@@ -11,6 +11,8 @@ var socket = io('http://localhost:8080');  // for localhost
 // questions and replys
 var questions = {};
 
+var CURRENT_COORDS;
+
 // used to process enter submitting in the input field txtInput
 // txtInput takes the input for current question
 function isEnterKey(event) {
@@ -30,15 +32,15 @@ function isEnterKey(event) {
 function  submitReply(event) {
     var txtArea = event.target;
     var socketID = txtArea.getAttribute("data-sid");
-    if(event.keyCode === 13 && (txtArea.value !== "" && txtArea != null)) {
+    if (event.keyCode === 13 && (txtArea.value !== "" && txtArea != null)) {
         socket.emit('newReply', {socketID: socketID, reply: txtArea.value});
         txtArea.value = '';
     }
 }
 
-socket.on('approvedReply', function(obj) {
-    document.getElementById('replylist'+obj.socketID).innerHTML +="<div class='reply'>"+obj.reply+"</div>";
-})
+socket.on('approvedReply', function (obj) {
+    document.getElementById('replylist' + obj.socketID).innerHTML += "<div class='reply'>" + obj.reply + "</div>";
+});
 
 // checks whether the question is blank or not
 // true = not blank
@@ -64,34 +66,35 @@ socket.on('AttachNewQuestion', function (msg) {
 // TODO refactor this event
 // msg contains a list of questions and socketIDs of other clients within 2km radius
 socket.on('AddNewQuestionToList', function (msg) {
-    console.log('new questions yay!'+msg);
+    console.log(count + ': addnewquestiontolist');
+    console.log('new questions yay!' + msg);
     Object.keys(questions).forEach(function (key) {
-        if(msg[key]) {
-            if(msg[key] !== questions[key]) {
+        if (msg[key]) {
+            if (msg[key] !== questions[key]) {
                 document.getElementById(key).innerHTML = "<div style='width:100%'>🠶 " + msg[key] + "</div>";
                 questions[key] = msg[key];
-                var replyID = "reply"+key;
+                var replyID = "reply" + key;
                 document.getElementById(replyID).innerHTML = "<div id='editable' style='replyHolder'>\n\
-                            <textarea placeholder='Reply to the question...' style='width:100%' rows='3' onkeyup=submitReply(event) data-sid='"+key+"'></textarea>\n\
-                            <div id='replylist"+key+"'>\n\
+                            <textarea placeholder='Reply to the question...' style='width:100%' rows='3' onkeyup=submitReply(event) data-sid='" + key + "'></textarea>\n\
+                            <div id='replylist" + key + "'>\n\
                                     </div>\n\
                         </div>";
             }
         } else {
-            var element = document.getElementById('tr'+key);
+            var element = document.getElementById('tr' + key);
             element.parentNode.removeChild(element);
-            console.log('delete:'+ questions[key]);
+            console.log('delete:' + questions[key]);
             delete questions[key];
         }
     });
     Object.keys(msg).forEach(function (key) {
         var tablehtml = '';  // set each column in a new row of a table. looks better this way imo
-        if(!questions[key]) {
-            tablehtml = "<tr id='tr"+key+"'><td> \n\
-                            <a class='innerLink' role='button' href='#' onclick='show(this)' id='"+key+"' data-active='false'><div style='width:100%'>🠶 " + msg[key] + "</div></a>\n\
-                            <div style='display:none;' id='reply"+key+"'> \n\
-                                <div id='editable' style='replyHolder'><textarea placeholder='Reply to the question...' style='width:100%' rows='3' onkeyup=submitReply(event) data-sid='"+key+"'></textarea></div>\n\
-                                    <div id='replylist"+key+"'>\n\
+        if (!questions[key]) {
+            tablehtml = "<tr id='tr" + key + "'><td> \n\
+                            <a class='innerLink' role='button' href='#' onclick='show(this)' id='" + key + "' data-active='false'><div style='width:100%'>🠶 " + msg[key] + "</div></a>\n\
+                            <div style='display:none;' id='reply" + key + "'> \n\
+                                <div id='editable' style='replyHolder'><textarea placeholder='Reply to the question...' style='width:100%' rows='3' onkeyup=submitReply(event) data-sid='" + key + "'></textarea></div>\n\
+                                    <div id='replylist" + key + "'>\n\
                                     </div>\n\
                             </div> \n\
                         </td></tr>";
@@ -100,11 +103,16 @@ socket.on('AddNewQuestionToList', function (msg) {
             console.log('new question attached');
         }
     });
+    setTimeout (function () {
+        if(CURRENT_COORDS)
+            positionUpdateSuccessCallback(CURRENT_COORDS);
+    }, 5000); // 5 secs. still have to decide on a timer but 5 secs seems decent enough ?
 });
 
-
+var count = 0;
 // called when page loads and then every 10 secs for update on client's position
 function updatePosition() {
+    console.log(++count + ': updatePosition');
     updatePositionHelper(positionUpdateSuccessCallback, function () {
         console.log('Cannot get location');
     });
@@ -113,7 +121,9 @@ function updatePosition() {
 // success callback for updatePositionHelper
 function positionUpdateSuccessCallback(coords) {
     // emit client's coordinated to the server
+    CURRENT_COORDS = coords;
     socket.emit('UpdatePosition', {coords: {'latitude': coords.latitude, 'longitude': coords.longitude}});
+    console.log(count + ': positionupdatesuccesscallback');
 }
 
 // helper function for updatePosition because that sorry little ass cant do shit by itself
@@ -130,12 +140,13 @@ function updatePositionHelper(successCallback, errorCallback) {
         // We have a real geolocation service.
         try {
             function handleSuccess(position) {
+                console.log(count + ': handle success success');
                 successCallback(position.coords);  // YAAYYYYY!!
             }
 
             geolocation.watchPosition(handleSuccess, errorCallback, {
                 enableHighAccuracy: true, // high accuracy because idk how but this fixes its problems with mobiles
-                maximumAge: 5000  // 5 sec.
+                maximumAge: 0  // 0 sec. ask for new object everytime user moves.
             });
         } catch (err) {
             errorCallback();  // NOOOOOO ;_;
@@ -143,7 +154,6 @@ function updatePositionHelper(successCallback, errorCallback) {
     } else {
         errorCallback();  // NOOOOOO T_T
     }
-    setTimeout(updatePosition, 10000);  // 10 secs
 }
 
 function show(thead) {
@@ -160,11 +170,11 @@ function show(thead) {
     }
 }
 
-socket.on('replyList', function (obj){
+socket.on('replyList', function (obj) {
     var html = "";
     console.log(obj.reply);
     for (var s in obj.reply) {
-        html += "<div class='reply'>"+obj.reply[s]+"</div>";
+        html += "<div class='reply'>" + obj.reply[s] + "</div>";
     }
-    document.getElementById('replylist'+obj.socketID).innerHTML = html;
+    document.getElementById('replylist' + obj.socketID).innerHTML = html;
 });
