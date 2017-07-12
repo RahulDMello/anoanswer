@@ -21,6 +21,9 @@ var app = http.createServer(function (request, response) {
     fs.createReadStream("./home.html").pipe(response);  // returns the home page
 });
 
+app.get('/ClientScript.js', function(req, res){
+    res.sendFile(__dirname + '/ClientScript.js.');
+});
 // socket.io object to communicate with client
 var io = require('socket.io')(app);
 
