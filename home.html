@@ -25,8 +25,8 @@ and open the template in the editor.
 
 
         <!-- socket.io -->
-        <script src = "node_modules\socket.io\node_modules\socket.io-client\dist\socket.io.js"></script>  <!-- for localhost -->
-        <!-- <script src ="/socket.io/socket.io.js"></script> for server deploy -->
+        <!-- <script src = "node_modules\socket.io\node_modules\socket.io-client\dist\socket.io.js"></script>  for localhost -->
+        <script src ="/socket.io/socket.io.js"></script><!--  for server deploy -->
 
         <!-- self made script for handling socket request -->
         <script src = "ClientScript.js"></script>
@@ -34,7 +34,7 @@ and open the template in the editor.
 
         <!-- data-spy on navbar that shows the current question -->
         <style>
-            
+
             // current question navbar css
             .navbar-inverse {
                 width:100%;
@@ -43,8 +43,9 @@ and open the template in the editor.
                 top:0;
                 width: 100%;
                 z-index: 9999 !important;
+                opacity: 0.8;
             }
-            
+
             // reply sections css
             .innerLink {
                 text-decoration:none;
@@ -62,6 +63,7 @@ and open the template in the editor.
                 position: relative;
                 z-index : 1;
                 padding: 5px 5px 5px 20px;
+                white-space: pre-line;
             }
             .reply:after {
                 content : "";
@@ -69,16 +71,21 @@ and open the template in the editor.
                 left    : 20px;
                 bottom  : 0;
                 height  : 20%;
-                width   : 90%;  /* or 100px */
-                border-bottom:1px solid magenta;
-                border-right:1px solid magenta;
+                width   : 96%;  /* or 100px */
+                border-bottom:1px solid #b1b1b1;//#436BA1;
+                border-right:1px solid #b1b1b1;//#436BA1;
                 padding: 0px 0px 0px 0px;
             }
             .replyHolder {
                 width:100%;
                 margin: 0 0 0 20px;
             }
-            
+
+            h4 {
+                display:inline;
+                color:black;
+            }
+
         </style>
 
     </head>
@@ -110,11 +117,15 @@ and open the template in the editor.
             <h3> ANSWER ANY OF THE FOLLOWING QUESTIONS </h3>
             <!-- placeholder for the list of questions -->
             <div>
-                <table class="table table-hover" cellspacing="15px">
+                <table class="table table-hover">
                     <tbody id="questions"></tbody>
                 </table>
             </div>
-            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>.
+            <div style="padding: 220px 0px 5px 0px;">
+                <div class="panel panel-default">
+                    <div class="panel-footer">The website allows its users to communicate with local people (other users within 2km radius of their current location) in form of question and answers. Because the app restricts questions to nearby users more personalized questions with local references can be asked without a lot of explanations. Each user is limited to asking a single question at a time. However one can make multiple replies to multiple questions. Don't be offensive to others and lets help each other as much as we can!</div>
+                </div>
+            </div>
         </div>
     </body>
 </html>

@@ -5,8 +5,8 @@
  */
 
 // init socket
-var socket = io('http://localhost:8080');  // for localhost
-// var socket = io('https://calm-crag-26465.herokuapp.com/');  for server deploy
+// var socket = io('http://localhost:8080');  for localhost
+var socket = io('https://calm-crag-26465.herokuapp.com/');  // for server deploy
 
 // questions and replys
 var questions = {};
@@ -32,8 +32,10 @@ function isEnterKey(event) {
 function  submitReply(event) {
     var txtArea = event.target;
     var socketID = txtArea.getAttribute("data-sid");
-    if (event.keyCode === 13 && (txtArea.value !== "" && txtArea != null)) {
-        socket.emit('newReply', {socketID: socketID, reply: txtArea.value});
+    var strvalue = txtArea.value.trim();
+    if (event.keyCode === 13 && !(strvalue === "") && !event.shiftKey) {
+        console.log('textArea.value: '+strvalue);
+        socket.emit('newReply', {socketID: socketID, reply: strvalue});
         txtArea.value = '';
     }
 }
@@ -71,7 +73,7 @@ socket.on('AddNewQuestionToList', function (msg) {
     Object.keys(questions).forEach(function (key) {
         if (msg[key]) {
             if (msg[key] !== questions[key]) {
-                document.getElementById(key).innerHTML = "<div style='width:100%'>🠶 " + msg[key] + "</div>";
+                document.getElementById(key).innerHTML = "<div style='width:100%'><h4>🠶 " + msg[key] + "</h4></div>";
                 questions[key] = msg[key];
                 var replyID = "reply" + key;
                 document.getElementById(replyID).innerHTML = "<div id='editable' style='replyHolder'>\n\
@@ -91,7 +93,7 @@ socket.on('AddNewQuestionToList', function (msg) {
         var tablehtml = '';  // set each column in a new row of a table. looks better this way imo
         if (!questions[key]) {
             tablehtml = "<tr id='tr" + key + "'><td> \n\
-                            <a class='innerLink' role='button' href='#' onclick='show(this)' id='" + key + "' data-active='false'><div style='width:100%'>🠶 " + msg[key] + "</div></a>\n\
+                            <a class='innerLink' role='button' href='#' onclick='show(this)' id='" + key + "' data-active='false'><div style='width:100%'><h4>🠶 " + msg[key] + "</h4></div></a>\n\
                             <div style='display:none;' id='reply" + key + "'> \n\
                                 <div id='editable' style='replyHolder'><textarea placeholder='Reply to the question...' style='width:100%' rows='3' onkeyup=submitReply(event) data-sid='" + key + "'></textarea></div>\n\
                                     <div id='replylist" + key + "'>\n\

@@ -12,8 +12,8 @@ var MongoClient = require('mongodb').MongoClient;
 // initialized when MongoClient is connected to the mongodb
 var db;
 // url to the database
-var url = "mongodb://localhost:27017/userinfo";  // for localhost
-// var url = "mongodb://calm-crag-26465.herokuapp.com/userinfo";  for server deploy
+// var url = "mongodb://localhost:27017/userinfo";  for localhost
+var url = "mongodb://heroku_j9dqfn5x:2e7jf7gtc785nbbdonvsan7tkt@ds157342.mlab.com:57342/heroku_j9dqfn5x";  // for server deploy
 
 // when someone requests the root '/' page
 var app = http.createServer(function (request, response) {
@@ -101,7 +101,7 @@ function onRequest(socket) {
                     delete io.sockets.sockets[id].questions[socket.id];
             });
             // sanity check for how many got deleted
-            console.log(obj.result.n + " document(s) deleted");
+            // console.log(obj.result.n + " document(s) deleted");
         });
         // sanity check for who got deleted
         console.log('disconnect: ' + socket.id);
@@ -165,7 +165,7 @@ function deg2rad(deg) {
     return deg * (Math.PI / 180);
 }
 
-// client connects with the db using the specified url (loop above)
+// client connects with the db using the specified url (look above)
 MongoClient.connect(url, function (err, database) {
     if (err)
         throw err;
@@ -175,8 +175,8 @@ MongoClient.connect(url, function (err, database) {
     console.log('database connected!');
     
     // specify port
-    // app.listen((process.env.PORT || 8080));  for server deploy
-    app.listen(8080);  // for localhost
+    app.listen((process.env.PORT || 8080));  // for server deploy
+    // app.listen(8080);  for localhost
     
     // we made it. it, its so beautiful (*^▽^*)
     console.log("server is running...");
