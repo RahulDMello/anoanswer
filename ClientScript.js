@@ -34,7 +34,6 @@ function  submitReply(event) {
     var socketID = txtArea.getAttribute("data-sid");
     var strvalue = txtArea.value.trim();
     if (event.keyCode === 13 && !(strvalue === "") && !event.shiftKey) {
-        console.log('textArea.value: '+strvalue);
         socket.emit('newReply', {socketID: socketID, reply: strvalue});
         txtArea.value = '';
     }
@@ -68,8 +67,6 @@ socket.on('AttachNewQuestion', function (msg) {
 // TODO refactor this event
 // msg contains a list of questions and socketIDs of other clients within 2km radius
 socket.on('AddNewQuestionToList', function (msg) {
-    console.log(count + ': addnewquestiontolist');
-    console.log('new questions yay!' + msg);
     Object.keys(questions).forEach(function (key) {
         if (msg[key]) {
             if (msg[key] !== questions[key]) {
@@ -85,7 +82,6 @@ socket.on('AddNewQuestionToList', function (msg) {
         } else {
             var element = document.getElementById('tr' + key);
             element.parentNode.removeChild(element);
-            console.log('delete:' + questions[key]);
             delete questions[key];
         }
     });
@@ -102,7 +98,6 @@ socket.on('AddNewQuestionToList', function (msg) {
                         </td></tr>";
             questions[key] = msg[key];
             document.getElementById('questions').innerHTML += tablehtml;
-            console.log('new question attached');
         }
     });
     setTimeout (function () {
@@ -111,10 +106,8 @@ socket.on('AddNewQuestionToList', function (msg) {
     }, 3500); // 3.5 secs. still have to decide on a timer but 5 secs seems decent enough ?
 });
 
-var count = 0;
 // called when page loads and then every 10 secs for update on client's position
 function updatePosition() {
-    console.log(++count + ': updatePosition');
     updatePositionHelper(positionUpdateSuccessCallback, function () {
         console.log('Cannot get location');
     });
@@ -125,7 +118,6 @@ function positionUpdateSuccessCallback(coords) {
     // emit client's coordinated to the server
     CURRENT_COORDS = coords;
     socket.emit('UpdatePosition', {coords: {'latitude': coords.latitude, 'longitude': coords.longitude}});
-    console.log(count + ': positionupdatesuccesscallback');
 }
 
 // helper function for updatePosition because that sorry little ass cant do shit by itself
@@ -142,7 +134,6 @@ function updatePositionHelper(successCallback, errorCallback) {
         // We have a real geolocation service.
         try {
             function handleSuccess(position) {
-                console.log(count + ': handle success success');
                 successCallback(position.coords);  // YAAYYYYY!!
             }
 
@@ -174,7 +165,6 @@ function show(thead) {
 
 socket.on('replyList', function (obj) {
     var html = "";
-    console.log(obj.reply);
     for (var s in obj.reply) {
         html += "<div class='reply'>" + obj.reply[s] + "</div>";
     }
