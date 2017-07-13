@@ -17,13 +17,15 @@ var url = "mongodb://heroku_j9dqfn5x:2e7jf7gtc785nbbdonvsan7tkt@ds157342.mlab.co
 
 // when someone requests the root '/' page
 var app = http.createServer(function (request, response) {
-    response.writeHead(200, {"Context-Type": "text/html"});
-    fs.createReadStream("./home.html").pipe(response);  // returns the home page
+    if (request.url === "/" || request.url === "/index.js" || request.url === "/homt.html") {
+        response.writeHead(200, {"Context-Type": "text/html"});
+        fs.createReadStream("./home.html").pipe(response);  // returns the home page
+    } else if (request.url === "/ClientScript.js") {
+        response.writeHead(200, {"Context-Type": "application/javascript"});
+        fs.createReadStream("./ClientScript.html").pipe(response);  // returns the client side js script
+    }
 });
 
-app.get('/ClientScript.js', function(req, res){
-    res.sendFile(__dirname + '/ClientScript.js.');
-});
 // socket.io object to communicate with client
 var io = require('socket.io')(app);
 
