@@ -6,7 +6,7 @@
 
 // init socket
 // var socket = io('http://localhost:8080');  for localhost
-var socket = io('https://calm-crag-26465.herokuapp.com/');  // for server deploy
+var socket = io('/');  // for server deploy
 
 // questions and replys
 var questions = {};
