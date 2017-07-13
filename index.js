@@ -22,10 +22,10 @@ var app = http.createServer(function (request, response) {
         fs.createReadStream("./home.html").pipe(response);  // returns the home page
     } else if (request.url === "/ClientScript.js") {
         response.writeHead(200, {"Context-Type": "application/javascript"});
-        fs.createReadStream("./ClientScript.html").pipe(response);  // returns the client side js script
+        fs.createReadStream("./ClientScript.js").pipe(response);  // returns the client side js script
     } else {
         response.writeHead(404, {"Content-Type": "text/html"});
-        response.write("<h1>404: File not found.</h1>");
+        response.end();
     }
 });
 
