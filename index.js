@@ -136,7 +136,7 @@ function updateUsersQuestionList(socket, sockets) {
                 for (var i = 0, l = result.length; i < l; i++) {
                     var coords2 = result[i].coords;
                     // check for where we have his coords and if he is nearby (2km)
-                    if (coords2 && getDistanceFromLatLonInKm(coords1.latitude, coords1.longitude, coords2.latitude, coords2.longitude) < 2) {
+                    if (coords2 && getDistanceFromLatLonInKm(coords1.latitude, coords1.longitude, coords2.latitude, coords2.longitude) < 5) {
                         socket.questions[result[i].socketID] = result[i].curr_ques;  // add if nearby
                     } else {
                         if (socket.questions[result[i].socketID])
