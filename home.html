@@ -87,6 +87,8 @@ and open the template in the editor.
             
             .head {
                 padding-top: 75px;
+                border-bottom: 1px solid;
+                border-color: 	#D3D3D3;
             }
             
             .head-foot   {
@@ -96,7 +98,24 @@ and open the template in the editor.
                 height: auto;
                 padding-bottom: 10px;
             }
-
+            
+            .row-footer {
+              margin: 0px auto;
+              padding: 20px 0px;
+            }
+            .row-content {
+              margin: 0px auto;
+              width: 100%
+              background-color: #AfAfAf;
+              border-bottom: 1px ridge;
+            }
+            
+            .social-media {
+                border-top: 1px solid;
+                border-bottom: 1px solid;
+                border-color: 	#D3D3D3;
+            }
+            
         </style>
 
     </head>
@@ -122,7 +141,9 @@ and open the template in the editor.
                     <option value="2">2</option>
                     <option value="5" selected>5</option>
                     <option value="10">10</option>
+                    <option value="15">15</option>
                     <option value="20">20</option>
+                    <option value="30">30</option>
                 </select> <span class="text-secondary"> KMs</span>
             </div>
         </div>
@@ -148,7 +169,7 @@ and open the template in the editor.
         </div>
             
         <div class="container">
-            <div style="padding-top: 10px;margin: 0px 0px 400px 0px;">
+            <div style="padding-top: 10px; min-height: 700px">
                 <h3> ANSWER ANY OF THE FOLLOWING QUESTIONS </h3>
                 <!-- placeholder for the list of questions -->
                 <div>
@@ -161,11 +182,27 @@ and open the template in the editor.
         
         <div class="container head-foot">
             <div>
+            </div>
+        </div>
+        
+        
+        <footer class="row-footer">
+        <div class="container head-foot">
+            <div class="row row-content">
                 <div class="panel panel-default">
                     <div class="panel-footer"><br>The website allows its users to communicate with local people (other users within the given distance of their current location) in form of question and answers. Because the app restricts questions to nearby users more personalized questions with local references can be asked without a lot of explanations. Each user is limited to asking a single question at a time. However one can make multiple replies to multiple questions. Don't be offensive to others and lets help each other as much as we can!</div>
                 </div>
             </div>
+            <div class="row row-content text-center d-flex align-self-center mr-3">
+                <div class="btn-group mx-auto social-media"> 
+                    <a class="btn btn-social-icon" href="http://rahulwordpressdemo-com.stackstaging.com/wordpress/" data-placement="top" title="Portfolio (Work in progress)"><i class="fa fa-user"></i></a>
+                    <a class="btn btn-social-icon" href="https://www.facebook.com/anonDfeline" data-toggle="tooltip" title="Facebook"><i class="fa fa-facebook"></i></a>
+                    <a class="btn btn-social-icon" href="https://www.linkedin.com/in/rvdmello96/" data-toggle="tooltip" title="LinkedIn"><i class="fa fa-linkedin"></i></a>
+                    <a class="btn btn-social-icon" href="https://twitter.com/anonDfeline" data-toggle="tooltip" title="Twitter (@anonDfeline)"><i class="fa fa-twitter"></i></a> 
+                </div>
+            </div>
         </div>
+    </footer>
         
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
