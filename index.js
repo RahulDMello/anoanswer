@@ -23,7 +23,11 @@ var app = http.createServer(function (request, response) {
     } else if (request.url === "/ClientScript.js") {
         response.writeHead(200, {"Context-Type": "application/javascript"});
         fs.createReadStream("./ClientScript.js").pipe(response);  // returns the client side js script
-    } else {
+    } else if (request.url === "/images/bg.jpg") {
+        response.writeHead(200, {"Context-Type": "application/javascript"});
+        fs.createReadStream("./images/bg.jpg").pipe(response);  // returns the background image
+    }
+    else {
         response.writeHead(404, {"Content-Type": "text/html"});
         response.end();
     }
