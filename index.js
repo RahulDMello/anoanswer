@@ -26,6 +26,9 @@ var app = http.createServer(function (request, response) {
     } else if (request.url === "/images/bg.jpg") {
         response.writeHead(200, {"Context-Type": "application/javascript"});
         fs.createReadStream("./images/bg.jpg").pipe(response);  // returns the background image
+    } else if (request.url === "/font-awesome/css/font-awesome.min.css") {
+        response.writeHead(200, {"Context-Type": "application/javascript"});
+        fs.createReadStream("./font-awesome/css/font-awesome.min.css").pipe(response);  // returns the background image
     }
     else {
         response.writeHead(404, {"Content-Type": "text/html"});
