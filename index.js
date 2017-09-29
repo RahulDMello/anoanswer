@@ -17,7 +17,7 @@ var url = "mongodb://heroku_j9dqfn5x:2e7jf7gtc785nbbdonvsan7tkt@ds157342.mlab.co
 
 // when someone requests the root '/' page
 var app = http.createServer(function (request, response) {
-    if (request.url === "/" || request.url === "/index.js" || request.url === "/homt.html") {
+    if (request.url === "/" || request.url === "/index.js" || request.url === "/home.html") {
         response.writeHead(200, {"Context-Type": "text/html"});
         fs.createReadStream("./home.html").pipe(response);  // returns the home page
     } else if (request.url === "/ClientScript.js") {
@@ -26,11 +26,22 @@ var app = http.createServer(function (request, response) {
     } else if (request.url === "/images/bg.jpg") {
         response.writeHead(200, {"Context-Type": "image/jpeg"});
         fs.createReadStream("./images/bg.jpg").pipe(response);  // returns the background image
-    } else if (request.url === "/font-awesome/css/font-awesome.min.css") {
-        response.writeHead(200, {"Context-Type": "text/css"});
-        fs.createReadStream("./font-awesome/css/font-awesome.min.css").pipe(response);  // returns font-awesome css
-    }
-    else {
+    }  else if (request.url === "/images/f.png") {
+        response.writeHead(200, {"Context-Type": "image/jpeg"});
+        fs.createReadStream("./images/f.png").pipe(response);  // returns the background image
+    }  else if (request.url === "/images/github.png") {
+        response.writeHead(200, {"Context-Type": "image/jpeg"});
+        fs.createReadStream("./images/github.png").pipe(response);  // returns the background image
+    }  else if (request.url === "/images/lin.png") {
+        response.writeHead(200, {"Context-Type": "image/jpeg"});
+        fs.createReadStream("./images/lin.png").pipe(response);  // returns the background image
+    }  else if (request.url === "/images/t.png") {
+        response.writeHead(200, {"Context-Type": "image/jpeg"});
+        fs.createReadStream("./images/t.png").pipe(response);  // returns the background image
+    }   else if (request.url === "/images/user.png") {
+        response.writeHead(200, {"Context-Type": "image/jpeg"});
+        fs.createReadStream("./images/user.png").pipe(response);  // returns the background image
+    } else {
         response.writeHead(404, {"Content-Type": "text/html"});
         response.end();
     }

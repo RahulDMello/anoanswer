@@ -12,7 +12,7 @@ and open the template in the editor.
 
         <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-    <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    
         <!-- socket.io -->
         <!-- <script src = "node_modules\socket.io\node_modules\socket.io-client\dist\socket.io.js"></script>  for localhost -->
         <script src ="/socket.io/socket.io.js"></script><!--  for server deploy -->
@@ -110,9 +110,14 @@ and open the template in the editor.
             }
             
             .social-media {
-                border-top: 1px solid;
-                border-bottom: 1px solid;
-                border-color: 	#D3D3D3;
+                border-top: 1px solid #D3D3D3;
+                border-bottom: 1px solid #D3D3D3;
+                height: 40px;
+            }
+            
+            .social-media-icon {
+                height: 100%;
+                max-width: 40px;
             }
             
         </style>
@@ -194,10 +199,11 @@ and open the template in the editor.
             </div>
             <div class="row row-content text-center d-flex align-self-center mr-3">
                 <div class="btn-group mx-auto social-media"> 
-                    <a class="btn btn-social-icon" href="http://rahulwordpressdemo-com.stackstaging.com/wordpress/" data-placement="top" title="Portfolio (Work in progress)"><i class="fa fa-user"></i></a>
-                    <a class="btn btn-social-icon" href="https://www.facebook.com/anonDfeline" data-toggle="tooltip" title="Facebook"><i class="fa fa-facebook"></i></a>
-                    <a class="btn btn-social-icon" href="https://www.linkedin.com/in/rvdmello96/" data-toggle="tooltip" title="LinkedIn"><i class="fa fa-linkedin"></i></a>
-                    <a class="btn btn-social-icon" href="https://twitter.com/anonDfeline" data-toggle="tooltip" title="Twitter (@anonDfeline)"><i class="fa fa-twitter"></i></a> 
+                    <a class="btn btn-social-icon" href="http://rahulwordpressdemo-com.stackstaging.com/wordpress/"><img class="social-media-icon" src="/images/user.png"></img></a>
+                    <a class="btn btn-social-icon" href="https://www.facebook.com/anonDfeline"><img class="social-media-icon" src="/images/f.png"></img></a>
+                    <a class="btn btn-social-icon" href="https://www.linkedin.com/in/rvdmello96/"><img class="social-media-icon" src="/images/lin.png"></img></a>
+                    <a class="btn btn-social-icon" href="https://twitter.com/anonDfeline"><img class="social-media-icon" src="/images/t.png"></img></a> 
+                    <a class="btn btn-social-icon" href="https://github.com/anonDfeline"><img class="social-media-icon" src="/images/github.png"></img></i></a> 
                 </div>
             </div>
         </div>
