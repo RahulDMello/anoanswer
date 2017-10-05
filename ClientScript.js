@@ -104,7 +104,6 @@ socket.on('AddNewQuestionToList', function (msg) {
     setTimeout (function () {
         if(CURRENT_COORDS) {
             positionUpdateSuccessCallback(CURRENT_COORDS);
-            console.log('matched: '+$("a[data-active='true']").length)
             $("a[data-active='true']").each(function(){
                     show(this,false);
             });
@@ -123,7 +122,7 @@ function updatePosition() {
 function positionUpdateSuccessCallback(coords) {
     // emit client's coordinated to the server
     CURRENT_COORDS = coords;
-    socket.emit('UpdatePosition', {coords: {'latitude': coords.latitude, 'longitude': coords.longitude}});
+    socket.emit('UpdatePosition', {coords: {'latitude': coords.latitude, 'longitude': coords.longitude}, dist: 5});
 }
 
 // helper function for updatePosition because that sorry little ass cant do shit by itself

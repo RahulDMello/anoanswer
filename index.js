@@ -87,7 +87,7 @@ function onRequest(socket) {
     // aye aye i will gladly accept your new position and have my way with it muahahahah!
     socket.on('UpdatePosition', function (position) {
         // update position for this socket in the database
-        db.collection("users").update({socketID: socket.id}, {$set: {coords: position.coords}}, function (err, obj) {
+        db.collection("users").update({socketID: socket.id}, {$set: {coords: position.coords, dist: position.dist}}, function (err, obj) {
             if (err)
                 throw err;
             // if successful update question list cuz he may have travelled super quick like a speedster and maybe now everything's changed including the poeple around him and their questions
@@ -143,6 +143,8 @@ function updateUsersQuestionList(socket, sockets) {
             throw err;
         user = result;  // useless but at this point i am too afraid to change anything
         var coords1 = user.coords;  // where the hell is he ayy ?
+        var pref_dist = user.dist;
+        console.log("prefered dist"+pref_dist)
         if (coords1) {
             // found you muahahhaha!
             // bring everyone here get me everyone you hear me EVERYONE EVERYONEEEEE! may i request them to be in an array pls. thanks
@@ -154,7 +156,7 @@ function updateUsersQuestionList(socket, sockets) {
                 for (var i = 0, l = result.length; i < l; i++) {
                     var coords2 = result[i].coords;
                     // check for where we have his coords and if he is nearby (2km)
-                    if (coords2 && getDistanceFromLatLonInKm(coords1.latitude, coords1.longitude, coords2.latitude, coords2.longitude) < 5) {
+                    if (coords2 && getDistanceFromLatLonInKm(coords1.latitude, coords1.longitude, coords2.latitude, coords2.longitude) < pref_dist) {
                         socket.questions[result[i].socketID] = result[i].curr_ques;  // add if nearby
                     } else {
                         if (socket.questions[result[i].socketID])
