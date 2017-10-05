@@ -104,11 +104,11 @@ socket.on('AddNewQuestionToList', function (msg) {
     setTimeout (function () {
         if(CURRENT_COORDS) {
             positionUpdateSuccessCallback(CURRENT_COORDS);
+            console.log('matched: '+$("div[data-active='true']").length)
             $("div[data-active='true']").each(function(){
                     show(this,false);
                      console.log('this.thead: '+this.thead)
             });
-            console.log('3.5 secs')
         }
     }, 3500); // 3.5 secs. still have to decide on a timer but 3.5 secs seems decent enough ?
 });
