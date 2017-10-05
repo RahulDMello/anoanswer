@@ -162,7 +162,7 @@ function show(thead, activate = true) {
         document.getElementById(str).style = "display:initial;";
         thead.setAttribute("data-active", "true");
     }
-    else if {
+    else {
         document.getElementById(str).style = "display:none;";
         thead.setAttribute("data-active", "false");
     }
