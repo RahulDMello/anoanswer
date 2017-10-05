@@ -104,10 +104,9 @@ socket.on('AddNewQuestionToList', function (msg) {
     setTimeout (function () {
         if(CURRENT_COORDS) {
             positionUpdateSuccessCallback(CURRENT_COORDS);
-            console.log('matched: '+$("div[data-active='true']").length)
+            console.log('matched: '+$("a[data-active='true']").length)
             $("a[data-active='true']").each(function(){
                     show(this,false);
-                     console.log('this.thead: '+this.thead)
             });
         }
     }, 3500); // 3.5 secs. still have to decide on a timer but 3.5 secs seems decent enough ?
@@ -161,7 +160,6 @@ function show(thead, activate = true) {
     var bool = thead.getAttribute("data-active");
     if (bool == "false" || !activate) {
         socket.emit('requestReplyList', thead.id);
-        console.log('requesting reply list for id '+ thead.id)
         document.getElementById(str).style = "display:initial;";
         thead.setAttribute("data-active", "true");
     }
@@ -177,5 +175,4 @@ socket.on('replyList', function (obj) {
         html += "<div class='reply'>" + obj.reply[s] + "</div>";
     }
     document.getElementById('replylist' + obj.socketID).innerHTML = html;
-    console.log('reply list fetched for id '+ obj.socketID)
 });
