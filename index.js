@@ -2,7 +2,7 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
- */
+ */ 
 
 var http = require('http');
 // file system ?
@@ -26,9 +26,9 @@ var app = http.createServer(function (request, response) {
     } else if (request.url === "/images/bg.jpg") {
         response.writeHead(200, {"Context-Type": "image/jpeg"});
         fs.createReadStream("./images/bg.jpg").pipe(response);  // returns the background image
-    }  else if (request.url === "/images/f.png") {
+    }  else if (request.url === "/images/Rahul_DMello_f.png") {
         response.writeHead(200, {"Context-Type": "image/jpeg"});
-        fs.createReadStream("./images/f.png").pipe(response);  // returns the background image
+        fs.createReadStream("./images/Rahul_DMello_f.png").pipe(response);  // returns the background image
     }  else if (request.url === "/images/github.png") {
         response.writeHead(200, {"Context-Type": "image/jpeg"});
         fs.createReadStream("./images/github.png").pipe(response);  // returns the background image

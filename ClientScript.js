@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+ 
 
 // init socket
 // var socket = io('http://localhost:8080');  for localhost
@@ -101,9 +102,13 @@ socket.on('AddNewQuestionToList', function (msg) {
         }
     });
     setTimeout (function () {
-        if(CURRENT_COORDS)
+        if(CURRENT_COORDS) {
             positionUpdateSuccessCallback(CURRENT_COORDS);
-    }, 3500); // 3.5 secs. still have to decide on a timer but 5 secs seems decent enough ?
+            $("div[data-active='true']").each(function(){
+                    show(this,false);                    
+            });
+        }
+    }, 3500); // 3.5 secs. still have to decide on a timer but 3.5 secs seems decent enough ?
 });
 
 // called when page loads and then every 10 secs for update on client's position
@@ -149,9 +154,10 @@ function updatePositionHelper(successCallback, errorCallback) {
     }
 }
 
-function show(thead) {
+function show(thead, activate = true) {
     var str = "reply" + thead.id;
     var bool = thead.getAttribute("data-active");
+    bool = activate ? bool : !bool;
     if (bool == "false") {
         socket.emit('requestReplyList', thead.id);
         document.getElementById(str).style = "display:initial;";
