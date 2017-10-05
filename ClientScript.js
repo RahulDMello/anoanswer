@@ -157,13 +157,12 @@ function updatePositionHelper(successCallback, errorCallback) {
 function show(thead, activate = true) {
     var str = "reply" + thead.id;
     var bool = thead.getAttribute("data-active");
-    bool = activate ? bool : !bool;
-    if (bool == "false") {
+    if (bool == "false" || !activate) {
         socket.emit('requestReplyList', thead.id);
         document.getElementById(str).style = "display:initial;";
         thead.setAttribute("data-active", "true");
     }
-    else {
+    else if {
         document.getElementById(str).style = "display:none;";
         thead.setAttribute("data-active", "false");
     }
