@@ -147,7 +147,6 @@ function updateUsersQuestionList(socket, sockets) {
             throw err;
         user = result;  // useless but at this point i am too afraid to change anything
         var coords1 = user.coords;  // where the hell is he ayy ?
-        console.log("prefered dist"+pref_dist)
         if (coords1) {
             // found you muahahhaha!
             // bring everyone here get me everyone you hear me EVERYONE EVERYONEEEEE! may i request them to be in an array pls. thanks
