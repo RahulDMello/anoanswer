@@ -122,7 +122,8 @@ function updatePosition() {
 function positionUpdateSuccessCallback(coords) {
     // emit client's coordinated to the server
     CURRENT_COORDS = coords;
-    socket.emit('UpdatePosition', {coords: {'latitude': coords.latitude, 'longitude': coords.longitude}, dist: 5});
+    socket.emit('UpdatePosition', {coords: {'latitude': coords.latitude, 'longitude': coords.longitude}, dist: $("#distance").find(":selected").text()});
+    console.log($("#distance").find(":selected").text());
 }
 
 // helper function for updatePosition because that sorry little ass cant do shit by itself
