@@ -159,6 +159,7 @@ function show(thead, activate = true) {
     var bool = thead.getAttribute("data-active");
     if (bool == "false" || !activate) {
         socket.emit('requestReplyList', thead.id);
+        console.log('requesting reply list for id '+ thead.id)
         document.getElementById(str).style = "display:initial;";
         thead.setAttribute("data-active", "true");
     }
@@ -174,4 +175,5 @@ socket.on('replyList', function (obj) {
         html += "<div class='reply'>" + obj.reply[s] + "</div>";
     }
     document.getElementById('replylist' + obj.socketID).innerHTML = html;
+    console.log('reply list fetched for id '+ obj.socketID)
 });
