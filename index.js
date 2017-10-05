@@ -74,12 +74,16 @@ function onRequest(socket) {
             // sends the question back to the client after some validations 
             // this event on the client side is responsible to show the question in the user's question area
             // TODO perform validations
-            db.collection("users").update({socketID: socket.id}, {$set: {curr_ques: msg, replys: []}}, function (err, obj) {
+            db.collection("users").update({socketID: socket.id}, {$set: {curr_ques: msg}}, function (err, obj) {
                 if (err)
                     throw err;
                 // success
                 socket.emit('AttachNewQuestion', msg); // he may set this question as his current question
                 updateUsersQuestionList(socket, io.sockets.sockets); // gotta update question list for everyone now that we have one more question in the market
+            });
+            db.collection("users").update({socketID: socket.id}, {$unset: {replys: ""}}, function (err, obj){
+                if (err)
+                    throw err;
             });
         }
     });
