@@ -66,7 +66,7 @@ socket.on('AttachNewQuestion', function (msg) {
 });
 
 // TODO refactor this event
-// msg contains a list of questions and socketIDs of other clients within 2km radius
+// msg contains a list of questions and socketIDs of other clients within 5km radius
 socket.on('AddNewQuestionToList', function (msg) {
     Object.keys(questions).forEach(function (key) {
         if (msg[key]) {
@@ -105,7 +105,7 @@ socket.on('AddNewQuestionToList', function (msg) {
         if(CURRENT_COORDS) {
             positionUpdateSuccessCallback(CURRENT_COORDS);
             console.log('matched: '+$("div[data-active='true']").length)
-            $("div[data-active='true']").each(function(){
+            $("a[data-active='true']").each(function(){
                     show(this,false);
                      console.log('this.thead: '+this.thead)
             });
