@@ -74,7 +74,7 @@ function onRequest(socket) {
             // sends the question back to the client after some validations 
             // this event on the client side is responsible to show the question in the user's question area
             // TODO perform validations
-            db.collection("users").update({socketID: socket.id}, {$set: {curr_ques: msg}}, function (err, obj) {
+            db.collection("users").update({socketID: socket.id}, {$set: {curr_ques: msg, replys: []}}, function (err, obj) {
                 if (err)
                     throw err;
                 // success
@@ -143,7 +143,6 @@ function updateUsersQuestionList(socket, sockets) {
             throw err;
         user = result;  // useless but at this point i am too afraid to change anything
         var coords1 = user.coords;  // where the hell is he ayy ?
-        var pref_dist = user.dist;
         console.log("prefered dist"+pref_dist)
         if (coords1) {
             // found you muahahhaha!
@@ -155,6 +154,7 @@ function updateUsersQuestionList(socket, sockets) {
                 // loop throw everyone to update their questions
                 for (var i = 0, l = result.length; i < l; i++) {
                     var coords2 = result[i].coords;
+                    var pref_dist = result[i].dist;
                     // check for where we have his coords and if he is nearby (2km)
                     if (coords2 && getDistanceFromLatLonInKm(coords1.latitude, coords1.longitude, coords2.latitude, coords2.longitude) < pref_dist) {
                         socket.questions[result[i].socketID] = result[i].curr_ques;  // add if nearby
