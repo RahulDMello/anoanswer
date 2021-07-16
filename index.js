@@ -41,6 +41,9 @@ var app = http.createServer(function (request, response) {
     }   else if (request.url === "/images/user.png") {
         response.writeHead(200, {"Context-Type": "image/jpeg"});
         fs.createReadStream("./images/user.png").pipe(response);  // returns the background image
+    } else if (request.url === "/favicon.ico") {
+        response.writehead(200, {"Context-Type": "image/jpeg"}};
+        fs.createReadStream("./favicon.ico").pipe(response);  // returns the favicon image
     } else {
         response.writeHead(404, {"Content-Type": "text/html"});
         response.end();
